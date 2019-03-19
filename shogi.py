@@ -172,10 +172,6 @@ def put(x,y):
     select = False
 """
 
-def reset_hold(x,y):
-    x = None
-    y = None
-
 class GUI:
     def __init__(self):
         self.x = 350
@@ -183,11 +179,12 @@ class GUI:
         self.x_board = None
         self.y_board = None
 
-    def reset_hold(x_board,y_board):
+    def reset_hold(self):
         self.x_board = None
         self.y_board = None
 
     def main(self):
+        c = 0
         while True:
             for event in pygame.event.get():
                 if event.type == MOUSEBUTTONUP and event.button == 1:
