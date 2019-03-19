@@ -122,23 +122,23 @@ def count():
     for i in range(7):
         image = pygame.image.load(png_name[i])
         image = pygame.transform.scale(image,(48,50))
-        screen.blit(image,(50*i+100,555))
+        screen.blit(image,(50*i+100,550))
         image = pygame.transform.rotate(image,180)
         screen.blit(image,(300-50*i+2,1))
     char = font.render(str(player1.hi_n),True,(255,255,255))
-    screen.blit(char,(120,610))
+    screen.blit(char,(120,605))
     char = font.render(str(player1.kaku_n),True,(255,255,255))
-    screen.blit(char,(170,610))
+    screen.blit(char,(170,605))
     char = font.render(str(player1.kin_n),True,(255,255,255))
-    screen.blit(char,(220,610))
+    screen.blit(char,(220,605))
     char = font.render(str(player1.gin_n),True,(255,255,255))
-    screen.blit(char,(270,610))
+    screen.blit(char,(270,605))
     char = font.render(str(player1.kei_n),True,(255,255,255))
-    screen.blit(char,(320,610))
+    screen.blit(char,(320,605))
     char = font.render(str(player1.kyo_n),True,(255,255,255))
-    screen.blit(char,(370,610))
+    screen.blit(char,(370,605))
     char = font.render(str(player1.hu_n),True,(255,255,255))
-    screen.blit(char,(420,610))
+    screen.blit(char,(420,605))
     char = font.render(str(player2.hi_n),True,(255,255,255))
     screen.blit(char,(320,50))
     char = font.render(str(player2.kaku_n),True,(255,255,255))
@@ -155,11 +155,16 @@ def count():
     screen.blit(char,(20,50))
 
 def pop(x,y):
-    if y>99 and y<550:
+    if (y>99 and y<550) or (y<100 and x<350) or (y>549 and x>99):
         x_rect = x-x%50
         y_rect = y-y%50
+        if y_rect == 50:
+            y_rect = 0
+        if y_rect >= 550:
+            y_rect = 550
         pygame.draw.rect(screen,(255,0,0),(x_rect,y_rect,51,51),1)
-        hold = board[int(x/50)][int(y/50)-2]
+        if y>99 and y<550:
+            hold = board[int(x/50)][int(y/50)-2]
 """
 def put(x,y):
     if y>99 and y<550:
@@ -167,22 +172,45 @@ def put(x,y):
     select = False
 """
 
-def main():
-    x=0
-    y=0
-    select = False
-    while True:
-        for event in pygame.event.get():
-            if event.type == MOUSEBUTTONUP and event.button == 1:
-                x,y = event.pos
-            if event.type == QUIT:
-                event.quit()
-                sys.exit
-        background()
-        set_koma()
-        count()
-        pop(x,y)
-        clock.tick(framerate)
-        pygame.display.update()
+def reset_hold(x,y):
+    x = None
+    y = None
 
-main()
+class GUI:
+    def __init__(self):
+        self.x = 350
+        self.y = 0
+        self.x_board = None
+        self.y_board = None
+
+    def reset_hold(x_board,y_board):
+        self.x_board = None
+        self.y_board = None
+
+    def main(self):
+        while True:
+            for event in pygame.event.get():
+                if event.type == MOUSEBUTTONUP and event.button == 1:
+                    self.x,self.y = event.pos
+                if event.type == QUIT:
+                    event.quit()
+                    sys.exit
+            background()
+            set_koma()
+            count()
+            pop(self.x,self.y)
+            if (self.y<100 and self.x<350):
+                self.x_board = 9
+                self.y_board = int(self.x/50)
+            if (self.y>549 and self.x>99):
+                self.x_board = 10
+                self.y_board = int(self.x/50)-2
+            if self.y>99 and self.y<550:
+                self.x_board = int(self.x/50)
+                self.y_board = int(self.y/50)-2
+            print(self.x_board, self.y_board)
+            clock.tick(framerate)
+            pygame.display.update()
+
+gui = GUI()
+gui.main()
