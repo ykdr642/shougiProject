@@ -9,23 +9,6 @@ font = pygame.font.Font("System.fon",55)
 framerate = 30
 clock = pygame.time.Clock()
 
-board = [[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None] \
-        ,[None,None,None,None,None,None,None,None,None]]
-"""
-end = True
-while end:
-    game.input()
-    end = game.update()
-    draw(game.board)
-"""
-
 #駒クラス
 class Koma:
     def __init__(self,name,rn,first,kc):
@@ -54,33 +37,85 @@ kei2 = Koma("桂","成桂",False,True)
 kyo2 = Koma("香","成香",False,True)
 hu2 = Koma("歩","と",False,True)
 
-#test
-board[0][0] = kyo2
-board[0][1] = kei2
-board[0][2] = gin2
-board[0][3] = kin2
-board[0][4] = gyoku2
-board[0][5] = kin2
-board[0][6] = gin2
-board[0][7] = kei2
-board[0][8] = kyo2
-board[1][1] = hi2
-board[1][7] = kaku2
-for i in range(9):
-    board[2][i] = hu2
-for i in range(9):
-    board[6][i] = hu
-board[8][0] = kyo
-board[8][1] = kei
-board[8][2] = gin
-board[8][3] = kin
-board[8][4] = ou
-board[8][5] = kin
-board[8][6] = gin
-board[8][7] = kei
-board[8][8] = kyo
-board[7][7] = hi
-board[7][1] = kaku
+class Board():
+    def __init__(self):
+        self.board = [[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None] \
+                    ,[None,None,None,None,None,None,None,None,None]]
+        
+        self.have = False
+        self.turn = "first"
+       
+        #test
+        self.board[0][0] = kyo2
+        self.board[0][1] = kei2
+        self.board[0][2] = gin2
+        self.board[0][3] = kin2
+        self.board[0][4] = gyoku2
+        self.board[0][5] = kin2
+        self.board[0][6] = gin2
+        self.board[0][7] = kei2
+        self.board[0][8] = kyo2
+        self.board[1][1] = hi2
+        self.board[1][7] = kaku2
+        for i in range(9):
+            self.board[2][i] = hu2
+        for i in range(9):
+            self.board[6][i] = hu
+        self.board[8][0] = kyo
+        self.board[8][1] = kei
+        self.board[8][2] = gin
+        self.board[8][3] = kin
+        self.board[8][4] = ou
+        self.board[8][5] = kin
+        self.board[8][6] = gin
+        self.board[8][7] = kei
+        self.board[8][8] = kyo
+        self.board[7][7] = hi
+        self.board[7][1] = kaku
+
+    def getdata(x,y):
+        if not self.have and not x is None and not y is None and もし選択した駒が自分の駒ならば(x,y):
+            self.have = True
+            self.haveKoma = [x,y]
+        elif have and not x is None and not y is None:
+            if ｘとｙがhaveKomaと同じならば:
+                have = False
+                #ターンは変えない
+            elif ありえない動き or 自分の駒がある:
+                have = False
+                #ターンは変えない
+            else:
+                self.move(x,y)
+                if 相手の駒があれば:
+                    if 裏ならば:
+                        ひっくり返す
+                    自分の駒にする
+                if 成れるならば:
+                    更新後の座標.reverse()
+            
+
+    def move(self,x,y):
+        pass
+
+
+
+board = Board()
+
+"""
+end = True
+while end:
+    game.input()
+    end = game.update()
+    draw(game.board)
+"""
+
 
 class Player:
     def __init__(self,hi_n,kaku_n,kin_n,gin_n,kei_n,kyo_n,hu_n,order):
@@ -109,14 +144,14 @@ def background():
 def set_koma():
     for i in range(9):
         for j in range(9):
-            if board[i][j] != None:
-                if board[i][j].komaChange:
-                    png_name = board[i][j].reverseName + ".png"
+            if board.board[i][j] != None:
+                if board.board[i][j].komaChange:
+                    png_name = board.board[i][j].reverseName + ".png"
                 else:
-                    png_name = board[i][j].name + ".png"
+                    png_name = board.board[i][j].name + ".png"
                 image = pygame.image.load(png_name)
                 image = pygame.transform.scale(image,(48,50))
-                if board[i][j].first == False:
+                if board.board[i][j].first == False:
                     image = pygame.transform.rotate(image,180)
                     screen.blit(image,(50*j+2,50*(i+2)+1))
                 else:
@@ -169,8 +204,10 @@ def pop(x,y):
         if y_rect >= 550:
             y_rect = 550
         pygame.draw.rect(screen,(255,0,0),(x_rect,y_rect,51,51),1)
+        """
         if y>99 and y<550:
             hold = board[int(x/50)][int(y/50)-2]
+        """
 """
 def put(x,y):
     if y>99 and y<550:
@@ -193,8 +230,12 @@ class GUI:
         c = 0
         while True:
             for event in pygame.event.get():
-                if event.type == MOUSEBUTTONUP and event.button == 1:
+                if event.type == MOUSEBUTTONDOWN and event.button == 1:
                     self.x,self.y = event.pos
+                if event.type == MOUSEBUTTONUP and event.button == 1:
+                    self.x = 350
+                    self.y = 0
+                    break
                 if event.type == QUIT:
                     event.quit()
                     sys.exit
@@ -214,6 +255,7 @@ class GUI:
             else:
                 self.reset_hold()
             print(self.x_board,self.y_board)
+            #board.getdata(self.x_board,self.y_board)
             clock.tick(framerate)
             pygame.display.update()
 
