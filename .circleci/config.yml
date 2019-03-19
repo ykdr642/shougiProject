@@ -7,20 +7,12 @@ jobs:
 
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ .Branch }}-{{ checksum "setup.py" }}
-            - v1-dependencies-{{ .Branch }}
       - run:
           name: install dependencies
           command: |
             python3 -m venv venv
             . venv/bin/activate
             pip install .
-      - save_cache:
-          paths:
-            - ./venv
-          key: v1-dependencies-{{ .Branch }}-{{ checksum "setup.py" }}
       - run:
           name: run tests
           command: |
