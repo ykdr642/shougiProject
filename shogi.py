@@ -28,35 +28,38 @@ while end:
 
 #駒クラス
 class Koma:
-    def __init__(self,name,first):
+    def __init__(self,name,rn,first,kc):
         self.name = name
+        self.reverseName = rn
         self.first = first
+        self.komaChange = kc
+
 #駒インスタンス
-ou = Koma("王",True)
-gyoku = Koma("玉",True)
-hi = Koma("飛",True)
-kaku = Koma("角",True)
-kin = Koma("金",True)
-gin = Koma("銀",True)
-kei = Koma("桂",True)
-kyo = Koma("香",True)
-hu = Koma("歩",True)
-ou2 = Koma("王",False)
-gyoku2 = Koma("玉",False)
-hi2 = Koma("飛",False)
-kaku2 = Koma("角",False)
-kin2 = Koma("金",False)
-gin2 = Koma("銀",False)
-kei2 = Koma("桂",False)
-kyo2 = Koma("香",False)
-hu2 = Koma("歩",False)
+ou = Koma("王",None,True,False)
+gyoku = Koma("玉",None,True,False)
+hi = Koma("飛","竜",True,True)
+kaku = Koma("角","馬",True,True)
+kin = Koma("金",None,True,False)
+gin = Koma("銀","成銀",True,True)
+kei = Koma("桂","成桂",True,True)
+kyo = Koma("香","成香",True,True)
+hu = Koma("歩","と",True,True)
+ou2 = Koma("王",None,False,False)
+gyoku2 = Koma("玉",None,False,False)
+hi2 = Koma("飛","竜",False,True)
+kaku2 = Koma("角","馬",False,True)
+kin2 = Koma("金",None,False,False)
+gin2 = Koma("銀","成銀",False,True)
+kei2 = Koma("桂","成桂",False,True)
+kyo2 = Koma("香","成香",False,True)
+hu2 = Koma("歩","と",False,True)
 
 #test
 board[0][0] = kyo2
 board[0][1] = kei2
 board[0][2] = gin2
 board[0][3] = kin2
-board[0][4] = ou2
+board[0][4] = gyoku2
 board[0][5] = kin2
 board[0][6] = gin2
 board[0][7] = kei2
@@ -107,7 +110,10 @@ def set_koma():
     for i in range(9):
         for j in range(9):
             if board[i][j] != None:
-                png_name = board[i][j].name + ".png"
+                if board[i][j].komaChange:
+                    png_name = board[i][j].reverseName + ".png"
+                else:
+                    png_name = board[i][j].name + ".png"
                 image = pygame.image.load(png_name)
                 image = pygame.transform.scale(image,(48,50))
                 if board[i][j].first == False:
@@ -199,13 +205,15 @@ class GUI:
             if (self.y<100 and self.x<350):
                 self.x_board = 9
                 self.y_board = int(self.x/50)
-            if (self.y>549 and self.x>99):
+            elif (self.y>549 and self.x>99):
                 self.x_board = 10
                 self.y_board = int(self.x/50)-2
-            if self.y>99 and self.y<550:
+            elif self.y>99 and self.y<550:
                 self.x_board = int(self.x/50)
                 self.y_board = int(self.y/50)-2
-            print(self.x_board, self.y_board)
+            else:
+                self.reset_hold()
+            print(self.x_board,self.y_board)
             clock.tick(framerate)
             pygame.display.update()
 
