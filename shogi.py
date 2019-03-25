@@ -8,6 +8,7 @@ pygame.display.set_caption("Let's Shogi")
 font = pygame.font.Font("System.fon",55)
 framerate = 30
 clock = pygame.time.Clock()
+imagepath = "./image/"
 
 #駒クラス
 class Koma:
@@ -79,7 +80,7 @@ class Board():
         self.board[8][8] = kyo
         self.board[7][7] = hi
         self.board[7][1] = kaku
-
+"""
     def getdata(x,y):
         if not self.have and not x is None and not y is None and もし選択した駒が自分の駒ならば(x,y):
             self.have = True
@@ -103,7 +104,7 @@ class Board():
 
     def move(self,x,y):
         pass
-
+"""
 
 
 board = Board()
@@ -146,9 +147,9 @@ def set_koma():
         for j in range(9):
             if board.board[i][j] != None:
                 if board.board[i][j].komaChange:
-                    png_name = board.board[i][j].reverseName + ".png"
+                    png_name = imagepath + board.board[i][j].reverseName + ".png"
                 else:
-                    png_name = board.board[i][j].name + ".png"
+                    png_name = imagepath + board.board[i][j].name + ".png"
                 image = pygame.image.load(png_name)
                 image = pygame.transform.scale(image,(48,50))
                 if board.board[i][j].first == False:
@@ -159,7 +160,7 @@ def set_koma():
 
 #所持駒を表示
 def count():
-    png_name = ["飛.png","角.png","金.png","銀.png","桂.png","香.png","歩.png"]
+    png_name = [imagepath + "飛.png",imagepath + "角.png",imagepath + "金.png",imagepath + "銀.png",imagepath + "桂.png",imagepath + "香.png",imagepath + "歩.png"]
     for i in range(7):
         image = pygame.image.load(png_name[i])
         image = pygame.transform.scale(image,(48,50))
