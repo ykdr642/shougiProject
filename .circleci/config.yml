@@ -10,11 +10,16 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            pip install --upgrade pip
+            python3 -m venv venv
+            source venv/bin/activate
             pip install pytest
+            pip install pygame
+            pip install numpy
       - run:
           name: run tests
           command: |
+            source venv/bin/activate
             pytest --junitxml=test-reports/junit.xml $(circleci tests glob tests/**/test_*.py | circleci tests split)
       - store_test_results:
           path: test-reports
+          
